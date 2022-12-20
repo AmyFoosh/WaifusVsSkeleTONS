@@ -1,0 +1,18 @@
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\bin\Debug\newGame.dll
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\bin\Debug\newGame.pdb
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.dll
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.xml
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\obj\Debug\Game Code.VS2010.csproj.AssemblyReference.cache
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\obj\Debug\Game Code.VS2010.csproj.CoreCompileInputs.cache
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\obj\Debug\Game Code.VS2010.csproj.CopyComplete
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\obj\Debug\newGame.dll
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Game Code\obj\Debug\newGame.pdb
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\bin\Debug\newGame.dll
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\bin\Debug\newGame.pdb
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.dll
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.xml
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\obj\Debug\Game Code.VS2010.csproj.AssemblyReference.cache
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\obj\Debug\Game Code.VS2010.csproj.CoreCompileInputs.cache
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\obj\Debug\Game Code.VS2010.csproj.CopyComplete
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\obj\Debug\newGame.dll
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Game Code\obj\Debug\newGame.pdb

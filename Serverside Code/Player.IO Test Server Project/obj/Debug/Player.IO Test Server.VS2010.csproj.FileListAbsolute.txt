@@ -1,0 +1,24 @@
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.exe
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.pdb
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\newGame.dll
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO Development Server.exe
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO GameLibrary.dll
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\newGame.pdb
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO GameLibrary.xml
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.VS2010.csproj.AssemblyReference.cache
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.VS2010.csproj.CoreCompileInputs.cache
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.VS2010.csproj.CopyComplete
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.exe
+C:\Users\Makishi\Desktop\MultiplayerBase\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.pdb
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.exe
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.pdb
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\newGame.dll
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO Development Server.exe
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO GameLibrary.dll
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\newGame.pdb
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO GameLibrary.xml
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.VS2010.csproj.AssemblyReference.cache
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.VS2010.csproj.CoreCompileInputs.cache
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.VS2010.csproj.CopyComplete
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.exe
+C:\Users\Makishi\Desktop\Waifus Vs SkeleTONS\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.pdb
