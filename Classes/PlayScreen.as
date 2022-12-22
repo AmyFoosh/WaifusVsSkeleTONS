@@ -2,8 +2,9 @@
 
 	import playerio.*;
 	import flash.events.Event;
-	import com.protobuf.Message;
 	import flash.geom.Rectangle;
+	import flash.events.TouchEvent;
+	import com.protobuf.Message;
 
 	public class PlayScreen extends ScreenSuperclass {
 
@@ -25,12 +26,17 @@
 		private var vCamTarget: int;
 		private var vCamMovement: String;
 		
+		private var entitiesScale: Number;
+		
 		// ---------------------------------------
 		
 		// -- DISPLAY CONTENT --
 		
 		private var bg: AssetSuperclass;
 		private var joystick: Joystick;
+		private var dashBtn: AssetSuperclass;
+		
+		private var playerShadow: AssetSuperclass;
 		
 		// ---------------------------------------
 
@@ -43,12 +49,10 @@
 
 		private function init(): void {
 
-			trace("PlayScreen is working.");
-			
 			initialiseMultiplayerVariables();
 			addMultiplayerContent();
 			adjustMultiplayerContent();
-			addMultiplayerListeners();
+			// addMultiplayerListeners();
 		}
 		
 		// ---------------------------------------
@@ -106,7 +110,11 @@
 		
 		private function serverConnectionError(error: PlayerIOError): void {
 			
+			// ---------------------------------------
+			
 			trace("Server connection error.");
+			
+			// ---------------------------------------
 		}
 		
 		private function joinRoomSuccess(connection:Connection): void {
@@ -125,31 +133,41 @@
 			
 			// -- MESSAGES HANDLER --
 			
+			connection.addMessageHandler("gameLoop", receiveGameLoop);
 			connection.addMessageHandler("myID", receiveMyID);
-			connection.addMessageHandler("playersPositions", receivePlayersPositions);
 			connection.addMessageHandler("connected", receiveConnected);
 			connection.addMessageHandler("disconnected", receiveDisconnected);
 			connection.addMessageHandler("move", receiveMove);
+			connection.addMessageHandler("dash", receiveDash);
 			
 			// ---------------------------------------
 			
 			connection.send("connected");
 			
 			// ---------------------------------------
-
-			
-			
-			// ---------------------------------------
 		}
 		
 		private function joinRoomError(error: PlayerIOError): void {
 			
+			// ---------------------------------------
+			
 			trace("Join room error.");
+			
+			// ---------------------------------------
 		}
+		
+		// ---------------------------------------
 		
 		// -- MULTIPLAYER MESSAGES HANDLER --
 		
+		private function receiveGameLoop(m: Message): void {
+			
+			// trace("Game loop.");
+		}
+		
 		private function receiveMyID(m: Message): void {
+			
+			// ---------------------------------------
 			
 			myID = m.getInt(0);
 			
@@ -164,38 +182,31 @@
 					vCamTarget = i;
 					
 					this.scrollRect = new Rectangle(playersSprites[i].x - screenW / 2, playersSprites[i].y - screenH / 2, screenW, screenH);
+				
+					break;
 				}
 			}
 			
+			// ---------------------------------------
+			
 			trace("VCam moved to player location.");
 			trace("VCam target: " + vCamTarget);
-		}
-		
-		private function receivePlayersPositions(m: Message): void {
 			
 			// ---------------------------------------
 			
-			trace("Players positions.");
+			// -- PLAYER SHADOW --
+			
+			/*playerShadow = new AssetSuperclass(scaled * entitiesScale, new Player2);
+			addChild(playerShadow);
+			
+			playerShadow.x = playersSprites[vCamTarget].x;
+			playerShadow.y = playersSprites[vCamTarget].y;*/
+			
+			this.setChildIndex(playersSprites[vCamTarget], this.numChildren - 1);
 			
 			// ---------------------------------------
 			
-			var playerID: int = m.getInt(0);
-			playersID.push(playerID);
-			
-			// ---------------------------------------
-			
-			var player: AssetSuperclass = new AssetSuperclass(scaled, new Player1);
-			addChild(player);
-			
-			player.x = m.getNumber(1) * scaled;
-			player.y = m.getNumber(2) * scaled;
-			
-			playersSprites.push(player);
-			
-			// ---------------------------------------
-			
-			trace("ID's " +  playersID);
-			trace("Players: " + playersSprites);
+			addMultiplayerListeners();
 			
 			// ---------------------------------------
 		}
@@ -215,11 +226,11 @@
 			
 			// ---------------------------------------
 			
-			var player: AssetSuperclass = new AssetSuperclass(scaled, new Player1);
+			var player: AssetSuperclass = new AssetSuperclass(scaled * entitiesScale, new Player1);
 			addChild(player);
 			
-			player.x = 0;
-			player.y = 0;
+			player.x = m.getNumber(1) * scaled;
+			player.y = m.getNumber(2) * scaled;
 			
 			playersSprites.push(player);
 			
@@ -267,18 +278,68 @@
 		
 		private function receiveMove(m: Message): void {
 			
-			var player: AssetSuperclass;
+			// ---------------------------------------
+			
+			var currentID: int = m.getNumber(0);
 			var angle: Number = m.getNumber(1);
+			
+			// ---------------------------------------
+			
+			if (myID != currentID) {
+				
+				for (var i: int = 0; i < playersID.length; i++) {
+					
+					if (currentID == playersID[i]) {
+						
+						playersSprites[i].x -= Math.cos(angle) * 4 * scaled;
+						playersSprites[i].y -= Math.sin(angle) * 4 * scaled;
+						
+						// trace("Another player moving.");
+					}
+				}
+				
+			} else {
+				
+				playersSprites[i].x -= Math.cos(angle) * 4 * scaled;
+				playersSprites[i].y -= Math.sin(angle) * 4 * scaled;
+				
+				// playerShadow.x -= Math.cos(angle) * 4 * scaled;
+				// playerShadow.y -= Math.sin(angle) * 4 * scaled;
+				
+				// trace("Shadow movement.");
+			}
+			
+			// ---------------------------------------
+		}
+		
+		private function receiveDash(m: Message): void {
+			
+			trace("Dash.");
+			
+			var currentID: int = m.getInt(0);
+			var angle: Number = m.getNumber(1);
+			var amount: Number = m.getInt(2);
+			
+			trace("-----------------------");
+			trace("Dash: ");
+			trace("ID:" + currentID);
+			trace("Angle: " + angle);
+			trace("Amount: " + amount);
+			trace("-----------------------");
 			
 			for (var i: int = 0; i < playersID.length; i++) {
 				
-				if (playersID[i] == m.getInt(0)) {
+				if (currentID == playersID[i]) {
 					
-					player = playersSprites[i];
-					
-					player.x -= Math.cos(angle) * 4 * scaled;
-					player.y -= Math.sin(angle) * 4 * scaled;
+					playersSprites[i].x -= Math.cos(angle) * amount * scaled;
+					playersSprites[i].y -= Math.sin(angle) * amount * scaled;
 				}
+				
+				/*if (myID == currentID) {
+				
+					playerShadow.x = playersSprites[i].x;
+					playerShadow.y = playersSprites[i].y;
+				}*/
 			}
 		}
 		
@@ -292,6 +353,8 @@
 			playersSprites = new Array();
 			
 			vCamMovement = "Delay"; // Delay or Direct
+			
+			entitiesScale = 0.75;
 		}
 
 		public function addMultiplayerContent(): void {
@@ -302,22 +365,38 @@
 			joystick = new Joystick(scaled, screenW, screenH, new JoystickBG, new JoystickAnalog, new JoystickArea);
 			addChild(joystick);
 			
-			joystick.setStartPos(0 + joystick.joystickBG.width / 2, screenH - joystick.joystickBG.height / 2);
+			dashBtn = new AssetSuperclass(scaled, new DashBtn);
+			addChild(dashBtn);
 		}
 
 		public function adjustMultiplayerContent(): void {
 
+			joystick.setStartPos(0 + joystick.joystickBG.width / 2, screenH - joystick.joystickBG.height / 2);
+			
+			dashBtn.x = screenW - dashBtn.width;
+			dashBtn.y = screenH - dashBtn.height;
 		}
 
 		public function addMultiplayerListeners(): void {
 
 			addEventListener(Event.ENTER_FRAME, gameLoop, false, 0, true);
+			
+			dashBtn.addEventListener(TouchEvent.TOUCH_TAP, dashClicked, false, 0, true);
 		}
 
 		public function removeMultiplayerListeners(): void {
 
 		}
 
+		private function dashClicked(event: TouchEvent): void {
+			
+			if (isNaN(joystick.getAngle)) return;
+			
+			trace("Player try to dash.");
+			
+			connection.send("dash", joystick.getAngle);
+		}
+		
 		// ---------------------------------------
 
 		// -- GAME LOOP --
@@ -331,12 +410,29 @@
 		
 		private function playerController(): void {
 			
+			// ---------------------------------------
+			
 			joystick.tick();
+			
+			// ---------------------------------------
 			
 			if (joystick.getJoystickIsClicked) {
 				
-				connection.send("move", joystick.getAngle);
+				for (var i: int = 0; i < playersID.length; i++) {
+					
+					if (myID == playersID[i]) {
+						
+						// playersSprites[i].x -= Math.cos(joystick.getAngle) * 4 * scaled;
+						// playersSprites[i].y -= Math.sin(joystick.getAngle) * 4 * scaled;
+						
+						connection.send("move", joystick.getAngle);
+						
+						break;
+					}
+				}
 			}
+			
+			// ---------------------------------------
 		}
 
 		// ---------------------------------------
@@ -345,7 +441,12 @@
 		
 		private function drawOrder(): void {
 			
+			// ---------------------------------------
+			
 			this.setChildIndex(joystick, this.numChildren - 1);
+			this.setChildIndex(dashBtn, this.numChildren - 1);
+			
+			// ---------------------------------------
 		}
 		
 		// ---------------------------------------
@@ -384,12 +485,18 @@
 				
 				joystick.x = rect.x;
 				joystick.y = rect.y;
+				
+				dashBtn.x = rect.x + screenW - dashBtn.width / 1.5;
+				dashBtn.y = rect.y + screenH - dashBtn.height / 1.5;
 			}
 			
 			if (vCamMovement == "Direct") {
 				
 				joystick.x = playersSprites[vCamTarget].x - screenW / 2;
 				joystick.y = playersSprites[vCamTarget].y - screenH / 2;
+				
+				dashBtn.x = playersSprites[vCamTarget].x + screenW / 2 - dashBtn.width / 1.5;
+				dashBtn.y = playersSprites[vCamTarget].y + screenH / 2 - dashBtn.height / 1.5;
 			}
 			
 			// ---------------------------------------
