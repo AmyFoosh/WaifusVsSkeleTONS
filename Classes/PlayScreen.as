@@ -4,7 +4,7 @@
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.events.TouchEvent;
-	import com.protobuf.Message;
+	import flash.display.Sprite;
 
 	public class PlayScreen extends ScreenSuperclass {
 
@@ -23,8 +23,8 @@
 		private var playersID: Array;
 		private var playersSprites: Array;
 		
-		private var vCamTarget: int;
-		private var vCamMovement: String;
+		private var vCamTarget: Sprite;
+		private var vCamDelay: int;
 		
 		private var entitiesScale: Number;
 		
@@ -37,6 +37,8 @@
 		private var dashBtn: AssetSuperclass;
 		
 		private var playerShadow: AssetSuperclass;
+		
+		private var skeleton: AssetSuperclass;
 		
 		// ---------------------------------------
 
@@ -133,12 +135,26 @@
 			
 			// -- MESSAGES HANDLER --
 			
-			connection.addMessageHandler("gameLoop", receiveGameLoop);
-			connection.addMessageHandler("myID", receiveMyID);
+			// Connection.
+			
 			connection.addMessageHandler("connected", receiveConnected);
 			connection.addMessageHandler("disconnected", receiveDisconnected);
+			
+			// Initialise game settings.
+			
+			connection.addMessageHandler("gameLoop", receiveGameLoop);
+			connection.addMessageHandler("myID", receiveMyID);
+			
+			// In-Game actions.
+			
 			connection.addMessageHandler("move", receiveMove);
 			connection.addMessageHandler("dash", receiveDash);
+			connection.addMessageHandler("dashCooldown", receiveDashCooldown);
+			
+			// Server behavior.
+			
+			connection.addMessageHandler("addSkeleton", receiveAddSkeleton);
+			connection.addMessageHandler("moveSkeleton", receiveMoveSkeleton);
 			
 			// ---------------------------------------
 			
@@ -179,9 +195,9 @@
 					
 					// -- ADD VCAM INITIAL POSITION --
 					
-					vCamTarget = i;
+					vCamTarget = playersSprites[i];
 					
-					this.scrollRect = new Rectangle(playersSprites[i].x - screenW / 2, playersSprites[i].y - screenH / 2, screenW, screenH);
+					this.scrollRect = new Rectangle(vCamTarget.x - screenW / 2, vCamTarget.y - screenH / 2, screenW, screenH);
 				
 					break;
 				}
@@ -202,7 +218,7 @@
 			playerShadow.x = playersSprites[vCamTarget].x;
 			playerShadow.y = playersSprites[vCamTarget].y;*/
 			
-			this.setChildIndex(playersSprites[vCamTarget], this.numChildren - 1);
+			// this.setChildIndex(vCamTarget, this.numChildren - 1);
 			
 			// ---------------------------------------
 			
@@ -282,6 +298,7 @@
 			
 			var currentID: int = m.getNumber(0);
 			var angle: Number = m.getNumber(1);
+			var movementSpeed: Number = m.getNumber(2);
 			
 			// ---------------------------------------
 			
@@ -291,8 +308,8 @@
 					
 					if (currentID == playersID[i]) {
 						
-						playersSprites[i].x -= Math.cos(angle) * 4 * scaled;
-						playersSprites[i].y -= Math.sin(angle) * 4 * scaled;
+						playersSprites[i].x -= Math.cos(angle) * movementSpeed * scaled;
+						playersSprites[i].y -= Math.sin(angle) * movementSpeed * scaled;
 						
 						// trace("Another player moving.");
 					}
@@ -300,8 +317,8 @@
 				
 			} else {
 				
-				playersSprites[i].x -= Math.cos(angle) * 4 * scaled;
-				playersSprites[i].y -= Math.sin(angle) * 4 * scaled;
+				playersSprites[i].x -= Math.cos(angle) * movementSpeed * scaled;
+				playersSprites[i].y -= Math.sin(angle) * movementSpeed * scaled;
 				
 				// playerShadow.x -= Math.cos(angle) * 4 * scaled;
 				// playerShadow.y -= Math.sin(angle) * 4 * scaled;
@@ -343,6 +360,35 @@
 			}
 		}
 		
+		private function receiveDashCooldown(m: Message): void {
+			
+			trace("Dash on Cooldown: " + m.getInt(0));
+		}
+		
+		private function receiveAddSkeleton(m: Message): void {
+			
+			trace("Skeleton Added:");
+			trace("Skeleton X: " + m.getNumber(0));
+			trace("Skeleton Y: " + m.getNumber(1));
+			
+			skeleton = new AssetSuperclass(scaled * entitiesScale, new Skeleton);
+			addChild(skeleton);
+			
+			skeleton.x = m.getNumber(0) * scaled;
+			skeleton.y = m.getNumber(1) * scaled;
+		}
+		
+		private function receiveMoveSkeleton(m: Message): void {
+			
+			// trace("Skeleton moved: ");
+			
+			var angle: Number = m.getNumber(0);
+			var movementSpeed: Number = m.getNumber(1);
+			
+			skeleton.x += Math.cos(angle) * movementSpeed * scaled;
+			skeleton.y += Math.sin(angle) * movementSpeed * scaled;
+		}
+		
 		// ---------------------------------------
 		
 		// -- INITIAL SETTINGS --
@@ -352,7 +398,7 @@
 			playersID = new Array();
 			playersSprites = new Array();
 			
-			vCamMovement = "Delay"; // Delay or Direct
+			vCamDelay = 30;
 			
 			entitiesScale = 0.75;
 		}
@@ -461,17 +507,10 @@
 			
 			// ---------------------------------------
 			
-			if (vCamMovement == "Delay") {
-				
-				rect.x += (playersSprites[vCamTarget].x - screenW / 2 - rect.x) / 30;
-				rect.y += (playersSprites[vCamTarget].y - screenH / 2 - rect.y) / 30;
-			}
+			// Adjust VCam position according to target position.
 			
-			if (vCamMovement == "Direct") {
-				
-				rect.x = playersSprites[vCamTarget].x - screenW / 2;
-				rect.y = playersSprites[vCamTarget].y - screenH / 2;
-			}
+			rect.x += (vCamTarget.x - screenW / 2 - rect.x) / vCamDelay;
+			rect.y += (vCamTarget.y - screenH / 2 - rect.y) / vCamDelay;
 			
 			// ---------------------------------------
 			
@@ -481,23 +520,11 @@
 			
 			// Move all UI content to target position.
 			
-			if (vCamMovement == "Delay") {
+			joystick.x = rect.x;
+			joystick.y = rect.y;
 				
-				joystick.x = rect.x;
-				joystick.y = rect.y;
-				
-				dashBtn.x = rect.x + screenW - dashBtn.width / 1.5;
-				dashBtn.y = rect.y + screenH - dashBtn.height / 1.5;
-			}
-			
-			if (vCamMovement == "Direct") {
-				
-				joystick.x = playersSprites[vCamTarget].x - screenW / 2;
-				joystick.y = playersSprites[vCamTarget].y - screenH / 2;
-				
-				dashBtn.x = playersSprites[vCamTarget].x + screenW / 2 - dashBtn.width / 1.5;
-				dashBtn.y = playersSprites[vCamTarget].y + screenH / 2 - dashBtn.height / 1.5;
-			}
+			dashBtn.x = rect.x + screenW - dashBtn.width / 1.5;
+			dashBtn.y = rect.y + screenH - dashBtn.height / 1.5;
 			
 			// ---------------------------------------
 		}
